@@ -713,8 +713,16 @@ The client provides a set of methods which allow you to subscribe to channel(s):
 - (void)subscribeOn:(NSArray *)channelObjects; 
 - (void)          subscribeOn:(NSArray *)channelObjects
   withCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock;
+- (void)subscribeOn:(NSArray *)channelObjects withCatchUpOn:(NSString *)catchUpTimeToken;
+- (void)          subscribeOn:(NSArray *)channelObjects withCatchUpOn:(NSString *)catchUpTimeToken
+   andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock;
 - (void)subscribeOn:(NSArray *)channelObjects withClientState:(NSDictionary *)clientState;
 - (void)         subscribeOn:(NSArray *)channelObjects withClientState:(NSDictionary *)clientState
+  andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock;
+- (void)subscribeOn:(NSArray *)channelObjects withCatchUpOn:(NSString *)catchUpTimeToken
+     andClientState:(NSDictionary *)clientState;
+- (void)         subscribeOn:(NSArray *)channelObjects withCatchUpOn:(NSString *)catchUpTimeToken
+                 clientState:(NSDictionary *)clientState
   andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock;
 ```
 `channelObjects` can be any of this objects: [**PNChannel**](#pnchannel-object) or [**PNChannelGroup**](#pnchannelgroup-object).  
@@ -735,9 +743,9 @@ withCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBloc
 + (void)subscribeOnChannels:(NSArray *)channels withClientState:(NSDictionary *)clientState
  andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock;
 ```
-Each subscription method has designated methods, to add a presence state information and/or add a handling block.  
+Each subscription method has designated methods, to add a presence state information, handling block and target time token at which client should catch up in any variations.   
 
-**NOTE:** Values remain bound to the client while it subscribed at specific channel. As soon as you will unsubscribe or subscribe to another set of channels or client will timeout, server will destroy stored client's state.  
+**NOTE:** Presence state information remain bound to the client while it subscribed at specific channel. As soon as you will unsubscribe or subscribe to another set of channels or client will timeout, server will destroy stored client's state.  
 
 PubNub client also provide methods to exam channels on which it is subscribed at this moment:  
 ```objc
@@ -794,6 +802,44 @@ PubNub *pubNub = [PubNub clientWithConfiguration:[PNConfiguration defaultConfigu
 // Subscribe on set of channels with subscription state handling block
 [pubNub subscribeOn:@[[PNChannel channelsWithName:@"iosdev" shouldObservePresence:YES]]
     withClientState:@{@"iosdev": {@"firstName":@"John", @"lastName":@"Appleseed", @"age":@(240)}}
+andCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels,
+                             PNError *subscriptionError) {  
+    
+    switch(state) {  
+    
+      case PNSubscriptionProcessNotSubscribedState:  
+
+            // There should be a reason because of which subscription failed and it can be found in 
+            // 'error' instance.
+            //
+            // Always check 'error.code' to find out what caused error (check PNErrorCodes header
+            // file and use -localizedDescription / -localizedFailureReason and 
+            // -localizedRecoverySuggestion to get human readable description for error).
+            // 'error.associatedObject' contains array of PNChannel instances on which PubNub
+            // client was unable to subscribe.
+          break;  
+      case PNSubscriptionProcessSubscribedState:  
+      
+          // PubNub client completed subscription on specified set of channels.
+          break;  
+    }  
+}
+}];
+```
+This is how you can catch up on channel/group:
+```objc
+PubNub *pubNub = [PubNub clientWithConfiguration:[PNConfiguration defaultConfiguration]
+                                     andDelegate:self];
+[pubNub connect];
+
+// Calculate target catch up date 300 seconds ago since reference time.
+PNDate *catchUpDate = [PNDate dateWithDate:[NSDate dateWithTimeIntervalSinceNow:-300.0f]];
+
+// Subscribe on set of channels with subscription state handling block
+[pubNub subscribeOn:@[[PNChannel channelsWithName:@"iosdev" shouldObservePresence:YES]]
+      withCatchUpOn:[[catchUpDate timeToken] stringValue]
+        clientState:@{@"iosdev": {@"firstName":@"John", @"lastName":@"Appleseed", 
+                      @"age":@(240)}}
 andCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels,
                              PNError *subscriptionError) {  
     

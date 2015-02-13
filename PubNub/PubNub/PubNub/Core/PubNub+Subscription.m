@@ -51,7 +51,7 @@
                        to get human readable description for error).
  */
 - (void)postponeSubscribeOn:(NSArray *)channelObjects withCatchUp:(BOOL)shouldCatchUp
-                clientState:(NSDictionary *)clientState
+                  catchUpOn:(NSString *)catchUpTimeToken clientState:(NSDictionary *)clientState
  andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock;
 
 /**
@@ -199,16 +199,8 @@
 + (void)         subscribeOn:(NSArray *)channelObjects withClientState:(NSDictionary *)clientState
   andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock {
     
-    [self subscribeOn:channelObjects withCatchUp:NO clientState:clientState
-andCompletionHandlingBlock:handlerBlock];
-}
-
-+ (void)         subscribeOn:(NSArray *)channelObjects withCatchUp:(BOOL)shouldCatchUp
-                 clientState:(NSDictionary *)clientState
-  andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock {
-    
-    [[self sharedInstance] subscribeOn:channelObjects withCatchUp:shouldCatchUp clientState:clientState
-            andCompletionHandlingBlock:handlerBlock];
+    [[self sharedInstance] subscribeOn:channelObjects withCatchUp:NO catchUpOn:nil
+                           clientState:clientState andCompletionHandlingBlock:handlerBlock];
 }
 
 + (void)unsubscribeFromChannel:(PNChannel *)channel {
@@ -329,6 +321,18 @@ withCompletionHandlingBlock:(PNClientChannelUnsubscriptionHandlerBlock)handlerBl
     [self subscribeOn:channelObjects withClientState:nil andCompletionHandlingBlock:handlerBlock];
 }
 
+- (void)subscribeOn:(NSArray *)channelObjects withCatchUpOn:(NSString *)catchUpTimeToken {
+
+    [self subscribeOn:channelObjects withCatchUpOn:catchUpTimeToken andCompletionHandlingBlock:nil];
+}
+
+- (void)          subscribeOn:(NSArray *)channelObjects withCatchUpOn:(NSString *)catchUpTimeToken
+   andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock {
+
+    [self subscribeOn:channelObjects withCatchUpOn:catchUpTimeToken clientState:nil
+            andCompletionHandlingBlock:handlerBlock];
+}
+
 - (void)subscribeOn:(NSArray *)channelObjects withClientState:(NSDictionary *)clientState {
     
     [self subscribeOn:channelObjects withClientState:clientState andCompletionHandlingBlock:nil];
@@ -336,14 +340,29 @@ withCompletionHandlingBlock:(PNClientChannelUnsubscriptionHandlerBlock)handlerBl
 
 - (void)         subscribeOn:(NSArray *)channelObjects withClientState:(NSDictionary *)clientState
   andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock {
-    
-    [self subscribeOn:channelObjects withCatchUp:NO clientState:clientState
-andCompletionHandlingBlock:handlerBlock];
+
+    [self subscribeOn:channelObjects withCatchUpOn:nil clientState:clientState
+            andCompletionHandlingBlock:handlerBlock];
 }
 
-- (void)         subscribeOn:(NSArray *)channelObjects withCatchUp:(BOOL)shouldCatchUp
+- (void)subscribeOn:(NSArray *)channelObjects withCatchUpOn:(NSString *)catchUpTimeToken
+     andClientState:(NSDictionary *)clientState {
+
+    [self subscribeOn:channelObjects withCatchUpOn:catchUpTimeToken clientState:clientState
+            andCompletionHandlingBlock:nil];
+}
+
+- (void)         subscribeOn:(NSArray *)channelObjects withCatchUpOn:(NSString *)catchUpTimeToken
                  clientState:(NSDictionary *)clientState
   andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock {
+
+    [self subscribeOn:channelObjects withCatchUp:NO catchUpOn:catchUpTimeToken
+          clientState:clientState andCompletionHandlingBlock:handlerBlock];
+}
+
+- (void)subscribeOn:(NSArray *)channelObjects withCatchUp:(BOOL)shouldCatchUp
+          catchUpOn:(NSString *)catchUpTimeToken clientState:(NSDictionary *)clientState
+        andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock {
     
     [self pn_dispatchBlock:^{
         
@@ -375,10 +394,10 @@ andCompletionHandlingBlock:handlerBlock];
                     
                     [self.observationCenter addClientAsSubscriptionObserverWithBlock:handlerBlock];
                 }
-                
-                
+
+
                 [self.messagingChannel subscribeOnChannels:channelObjects withCatchUp:shouldCatchUp
-                                            andClientState:clientState];
+                                                 catchUpOn:catchUpTimeToken andClientState:clientState];
             }
             // Looks like client can't send request because of some reasons
             else {
@@ -411,22 +430,24 @@ andCompletionHandlingBlock:handlerBlock];
                        return @[PNLoggerSymbols.api.postponeSubscription,
                                 [self humanReadableStateFrom:self.state]];
                    }];
-                   
-                   [self postponeSubscribeOn:channelObjects withCatchUp:shouldCatchUp clientState:clientState
+
+                   [self postponeSubscribeOn:channelObjects withCatchUp:shouldCatchUp
+                                   catchUpOn:catchUpTimeToken clientState:clientState
                   andCompletionHandlingBlock:handlerBlock];
                }];
     }];
 }
 
-- (void) postponeSubscribeOn:(NSArray *)channelObjects withCatchUp:(BOOL)shouldCatchUp
-                 clientState:(NSDictionary *)clientState
-  andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock {
+- (void)postponeSubscribeOn:(NSArray *)channelObjects withCatchUp:(BOOL)shouldCatchUp
+                  catchUpOn:(NSString *)catchUpTimeToken clientState:(NSDictionary *)clientState
+ andCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBlock {
     
     PNClientChannelSubscriptionHandlerBlock handlerBlockCopy = (handlerBlock ? [handlerBlock copy] : nil);
-    [self postponeSelector:@selector(subscribeOn:withCatchUp:clientState:andCompletionHandlingBlock:)
+    [self postponeSelector:@selector(subscribeOn:withCatchUp:catchUpOn:clientState:andCompletionHandlingBlock:)
                  forObject:self
             withParameters:@[[PNHelper nilifyIfNotSet:channelObjects], @(shouldCatchUp),
-                             [PNHelper nilifyIfNotSet:clientState], [PNHelper nilifyIfNotSet:handlerBlockCopy]]
+                             [PNHelper nilifyIfNotSet:catchUpTimeToken], [PNHelper nilifyIfNotSet:clientState],
+                             [PNHelper nilifyIfNotSet:handlerBlockCopy]]
                 outOfOrder:NO];
 }
 

@@ -40,6 +40,7 @@
 #import "PNConstants.h"
 #import "PNHelper.h"
 #import "PNCache.h"
+#import "PNStructures.h"
 
 
 // ARC check
@@ -54,12 +55,12 @@
 /**
  Name of the branch which is used to store current codebase.
  */
-static NSString * const kPNCodebaseBranch = @"master";
+static NSString * const kPNCodebaseBranch = @"feature-pt88308150";
 
 /**
  SHA of the commit which stores actual changes in this codebase.
  */
-static NSString * const kPNCodeCommitIdentifier = @"636d5d9649471dd534ef6a287c0416ed075fbc75";
+static NSString * const kPNCodeCommitIdentifier = @"90d0dfde797b18e88d4fb311ed18fcc817bf0268";
 
 /**
  Stores reference on singleton PubNub instance and dispatch once token.
@@ -1197,24 +1198,25 @@ shouldObserveProcessing:(BOOL)shouldObserveProcessing;
                         void(^subscribeBlock)(void) = ^{
                             
                             __strong __typeof__(self) strongSelf = weakSelf;
-                            
                             strongSelf.asyncLockingOperationInProgress = NO;
-                            [strongSelf subscribeOn:allChannels withCatchUp:shouldCatchup clientState:nil
-                       andCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *subscribedChannels,
-                                                    PNError *subscribeError) {
-                           
-                           if (subscribeError == nil) {
-                               
-                               strongSelf.updatingClientIdentifier = NO;
-                               [allChannels makeObjectsPerformSelector:@selector(unlockTimeTokenChange)];
-                               
-                               [strongSelf handleLockingOperationComplete:YES];
-                           }
-                           else {
-                               
-                               retrySubscription(subscribeError);
-                           }
-                       }];
+                            [strongSelf subscribeOn:allChannels withCatchUp:shouldCatchup
+                                          catchUpOn:nil clientState:nil
+                         andCompletionHandlingBlock:^(PNSubscriptionProcessState state,
+                                                      NSArray *subscribedChannels,
+                                    PNError *subscribeError) {
+
+                                if (subscribeError == nil) {
+
+                                    strongSelf.updatingClientIdentifier = NO;
+                                    [allChannels makeObjectsPerformSelector:@selector(unlockTimeTokenChange)];
+
+                                    [strongSelf handleLockingOperationComplete:YES];
+                                }
+                                else {
+
+                                    retrySubscription(subscribeError);
+                                }
+                            }];
                         };
                         
                         retrySubscription = ^(PNError *error) {

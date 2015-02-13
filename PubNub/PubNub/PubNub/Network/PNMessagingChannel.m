@@ -164,7 +164,8 @@ typedef NS_OPTIONS(NSUInteger, PNMessagingConnectionStateFlag)  {
  \b NSDictionary instance with list of parameters which should be bound to the client.
  */
 - (void)subscribeOnChannels:(NSArray *)channels withPresence:(NSUInteger)channelsPresence
-                    catchUp:(BOOL)shouldCatchUp andClientState:(NSDictionary *)clientState;
+                    catchUp:(BOOL)shouldCatchUp catchUpOn:(NSString *)catchUpTimeToken
+             andClientState:(NSDictionary *)clientState;
 
 /**
  Unsubscribe from all channels and allow to specify whether request has been done by user or not.
@@ -1018,19 +1019,20 @@ typedef NS_OPTIONS(NSUInteger, PNMessagingConnectionStateFlag)  {
 }
 
 - (void)subscribeOnChannels:(NSArray *)channels {
-    
-    [self subscribeOnChannels:channels withCatchUp:NO andClientState:nil];
+
+    [self subscribeOnChannels:channels withCatchUp:NO catchUpOn:nil andClientState:nil];
 }
 
 - (void)subscribeOnChannels:(NSArray *)channels withCatchUp:(BOOL)shouldCatchUp
-             andClientState:(NSDictionary *)clientState {
+                  catchUpOn:(NSString *)catchUpTimeToken andClientState:(NSDictionary *)clientState {
     
     clientState = [[self stateFromClientState:clientState
                                   forChannels:[[self subscribedChannels] arrayByAddingObjectsFromArray:channels]] mutableCopy];
 
     [self mergedClientStateWithState:clientState andBlock:^(NSDictionary *mergedState) {
 
-        [self subscribeOnChannels:channels withPresence:0 catchUp:shouldCatchUp andClientState:mergedState];
+        [self subscribeOnChannels:channels withPresence:0 catchUp:shouldCatchUp
+                        catchUpOn:catchUpTimeToken andClientState:mergedState];
     }];
 }
 
@@ -1082,12 +1084,13 @@ typedef NS_OPTIONS(NSUInteger, PNMessagingConnectionStateFlag)  {
 }
 
 - (void)subscribeOnChannels:(NSArray *)channels withPresence:(NSUInteger)channelsPresence {
-    
-    [self subscribeOnChannels:channels withPresence:channelsPresence catchUp:NO andClientState:nil];
+
+    [self subscribeOnChannels:channels withPresence:channelsPresence catchUp:NO catchUpOn:nil andClientState:nil];
 }
 
 - (void)subscribeOnChannels:(NSArray *)channels withPresence:(NSUInteger)channelsPresence
-                    catchUp:(BOOL)shouldCatchUp andClientState:(NSDictionary *)clientState {
+                    catchUp:(BOOL)shouldCatchUp catchUpOn:(NSString *)catchUpTimeToken
+             andClientState:(NSDictionary *)clientState {
 
     [self pn_dispatchBlock:^{
 
@@ -1328,6 +1331,20 @@ typedef NS_OPTIONS(NSUInteger, PNMessagingConnectionStateFlag)  {
                     [subscriptionChannelsSet makeObjectsPerformSelector:@selector(resetUpdateTimeToken)];
                     [channelsForPresenceEnabling makeObjectsPerformSelector:@selector(resetUpdateTimeToken)];
                     [channelsForPresenceDisabling makeObjectsPerformSelector:@selector(resetUpdateTimeToken)];
+                }
+
+                if (catchUpTimeToken) {
+
+                    [subscriptionChannelsSet makeObjectsPerformSelector:@selector(setUpdateTimeToken:)
+                                                             withObject:catchUpTimeToken];
+                    [channelsForPresenceEnabling makeObjectsPerformSelector:@selector(setUpdateTimeToken:)
+                                                                 withObject:catchUpTimeToken];
+                    [channelsForPresenceDisabling makeObjectsPerformSelector:@selector(setUpdateTimeToken:)
+                                                                  withObject:catchUpTimeToken];
+                    
+                    [subscriptionChannelsSet makeObjectsPerformSelector:@selector(lockTimeTokenChange)];
+                    [channelsForPresenceEnabling makeObjectsPerformSelector:@selector(lockTimeTokenChange)];
+                    [channelsForPresenceDisabling makeObjectsPerformSelector:@selector(lockTimeTokenChange)];
                 }
 
                 dispatch_block_t requestCompletionBlock = ^{

@@ -91,7 +91,7 @@
 static NSNumber* PNTimeTokenFromDate(NSDate *date);
 NSNumber* PNTimeTokenFromDate(NSDate *date) {
 
-    unsigned long long int longLongValue = ((unsigned long long int)[date timeIntervalSince1970])*10000000;
+    unsigned long long int longLongValue = (unsigned long long int)([date timeIntervalSince1970]*10000000);
 
 
     return [NSNumber numberWithUnsignedLongLong:longLongValue];

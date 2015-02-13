@@ -87,25 +87,27 @@
 - (void)subscribeOnChannels:(NSArray *)channels;
 
 /**
- Method will initiate subscription on specified set of channels. This request will add provided channels set to the
- list of channels on which client already subscribed.
+ @brief Method will initiate subscription on specified set of channels. This request will add
+        provided channels set to the list of channels on which client already subscribed.
 
  @code
  @endcode
- This method extends \a -subscribeOnChannels: and allow to specify whether presence event should be generated or not.
+ This method extends \a -subscribeOnChannels: and allow to specify whether presence event should be
+ generated or not.
 
- @param channels
- List of \b PNChannel instances on which it should subscribe.
-
- @param shouldCatchUp
- Specify whether client should forcibly use last time token or use configuration value.
-
- @param clientState
- \b NSDictionary instance with list of parameters which should be bound to the client.
+ @param channels         List of \b PNChannel instances on which it should subscribe.
+ @param shouldCatchUp    Specify whether client should forcibly use last time token or use
+                         configuration value.
+ @param catchUpTimeToken Time token on which client should catch-up during subscription process.
+                         This value can be manually generated using \b PNDate stringified
+                         \c -timeToken value or data feed object \c updateTimeToken property value
+                         which has been stored before unsubscription (on unsubscribe value get
+                         flushed) on any event type.
+ @param clientState      \b NSDictionary instance with list of parameters which should be bound to
+                         the client.
  */
-- (void)subscribeOnChannels:(NSArray *)channels
-                withCatchUp:(BOOL)shouldCatchUp
-             andClientState:(NSDictionary *)clientState;
+- (void)subscribeOnChannels:(NSArray *)channels withCatchUp:(BOOL)shouldCatchUp
+                  catchUpOn:(NSString *)catchUpTimeToken andClientState:(NSDictionary *)clientState;
 
 /**
  * Will unsubscribe client from set of channels. Specified set of channels will be removed from the list of
