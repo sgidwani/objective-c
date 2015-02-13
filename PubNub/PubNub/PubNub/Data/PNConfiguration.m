@@ -346,12 +346,15 @@
 
     if (shouldKillDNSCache) {
 
-        NSString *subDomain = [self.realOrigin stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@".%@",
-                                                                                     kPNServiceMainDomain]
-                                                                         withString:@""];
-
-        self.origin = [NSString stringWithFormat:@"%@-%ld.%@", subDomain, (long)[PNHelper randomInteger],
-                        kPNServiceMainDomain];
+        if ([self.realOrigin isEqual:kPNDefaultOriginHost]) {
+            
+            NSString *subDomain = [self.realOrigin stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@".%@",
+                                                                                         kPNServiceMainDomain]
+                                                                             withString:@""];
+            
+            self.origin = [NSString stringWithFormat:@"%@-%ld.%@", subDomain, (long)[PNHelper randomInteger],
+                           kPNServiceMainDomain];
+        }
     }
     else {
 
