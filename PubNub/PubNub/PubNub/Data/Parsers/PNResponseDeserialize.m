@@ -208,9 +208,9 @@ static NSString * const kPNCloseConnectionTypeFieldValue = @"close";
                                              @(originalPacketOffset)];
                                 }];
                                 
-                                [PNLogger storeGarbageHTTPPacketData:^NSData * {
-                                    
-                                    return [NSData dataWithBytes:bytes length:originalPacketOffset];
+                                [PNLogger storeGarbageHTTPPacketData:^dispatch_data_t {
+
+                                    return dispatch_data_create_subrange(buffer, 0, bufferSize);
                                 }];
                             }
                             // Looks like potentionally we have read buffer which may haave more content in next portion.
@@ -339,10 +339,10 @@ static NSString * const kPNCloseConnectionTypeFieldValue = @"close";
                                         return @[PNLoggerSymbols.deserializer.garbageResponseData,
                                                  @(size)];
                                     }];
-                                    
-                                    [PNLogger storeGarbageHTTPPacketData:^NSData * {
-                                        
-                                        return [NSData dataWithBytes:bytes length:size];
+
+                                    [PNLogger storeGarbageHTTPPacketData:^dispatch_data_t {
+
+                                        return dispatch_data_create_subrange(buffer, 0, bufferSize);
                                     }];
                                 }
                             }
@@ -360,18 +360,9 @@ static NSString * const kPNCloseConnectionTypeFieldValue = @"close";
                         }];
                         
                         processedLength = bufferSize;
-                        [PNLogger storeGarbageHTTPPacketData:^NSData * {
-                            
-                            const void *garbageData;
-                            unsigned long garbageDataSize = 0;
-                            dispatch_data_t new_data_file = dispatch_data_create_map(buffer, &garbageData, &garbageDataSize);
-                            NSData *garbage = nil;
-                            if (new_data_file && garbageDataSize > 0) {
-                                
-                                garbage = [NSData dataWithBytes:garbageData length:garbageDataSize];
-                            }
-                            
-                            return garbage;
+                        [PNLogger storeGarbageHTTPPacketData:^dispatch_data_t {
+
+                            return dispatch_data_create_subrange(buffer, 0, bufferSize);
                         }];
                     }
                 }
