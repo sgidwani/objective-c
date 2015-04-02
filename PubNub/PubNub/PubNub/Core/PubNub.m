@@ -546,8 +546,8 @@ shouldObserveProcessing:(BOOL)shouldObserveProcessing;
             [_sharedInstance.serviceChannel terminate];
             _sharedInstance.messagingChannel = nil;
             _sharedInstance.serviceChannel = nil;
-            [_sharedInstance.reachability stopServiceReachabilityMonitoring];
-            _sharedInstance.reachability = nil;
+            /*[_sharedInstance.reachability stopServiceReachabilityMonitoring];
+            _sharedInstance.reachability = nil;*/
 
             _sharedInstance.reprioritizedPendingInvocations = nil;
             _sharedInstance.pendingInvocations = nil;
@@ -661,8 +661,8 @@ shouldObserveProcessing:(BOOL)shouldObserveProcessing;
         }
         
         // Adding PubNub services availability observer
-        __block __pn_desired_weak PubNub *weakSelf = self;
-        self.reachability = [PNReachability serviceReachability];
+        //__block __pn_desired_weak PubNub *weakSelf = self;
+        /*self.reachability = [PNReachability serviceReachability];
         self.reachability.reachabilityChangeHandleBlock = ^(BOOL connected) {
             
             __strong __typeof__(self) strongSelf = weakSelf;
@@ -934,7 +934,7 @@ shouldObserveProcessing:(BOOL)shouldObserveProcessing;
                     }
                 }
             }];
-        };
+        };*/
         if (configuration) {
             
             [self setupWithConfiguration:configuration andDelegate:delegate];
