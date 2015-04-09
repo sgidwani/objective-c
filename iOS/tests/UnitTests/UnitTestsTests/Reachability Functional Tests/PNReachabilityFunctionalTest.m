@@ -67,7 +67,7 @@
         }
     }];
     
-    [[[PubNub sharedInstance] reachability] test];
+//    [[[PubNub sharedInstance] reachability] test];
     
     
     if ([GCDWrapper isGCDGroup:group timeoutFiredValue:kTestTestTimout]) {

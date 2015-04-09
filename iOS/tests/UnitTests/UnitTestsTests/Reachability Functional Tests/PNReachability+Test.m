@@ -42,8 +42,26 @@
 
 void PNReachabilityCallback(SCNetworkReachabilityRef reachability __unused, SCNetworkReachabilityFlags flags, void *info);
 
-- (void)test {
-    PNReachabilityCallback(self.serviceReachability, 2, NULL);
+- (void)callbackReachabilityWithFlags:(SCNetworkConnectionFlags)flags {
+    
+    /*
+     kSCNetworkReachabilityFlagsTransientConnection	= 1<<0,
+     kSCNetworkReachabilityFlagsReachable		= 1<<1,
+     kSCNetworkReachabilityFlagsConnectionRequired	= 1<<2,
+     kSCNetworkReachabilityFlagsConnectionOnTraffic	= 1<<3,
+     kSCNetworkReachabilityFlagsInterventionRequired	= 1<<4,
+     kSCNetworkReachabilityFlagsConnectionOnDemand	= 1<<5,	// __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_3_0)
+     kSCNetworkReachabilityFlagsIsLocalAddress	= 1<<16,
+     kSCNetworkReachabilityFlagsIsDirect		= 1<<17,
+     #if	TARGET_OS_IPHONE
+     kSCNetworkReachabilityFlagsIsWWAN		= 1<<18,
+     #endif	// TARGET_OS_IPHONE
+     
+     kSCNetworkReachabilityFlagsConnectionAutomatic	= kSCNetworkReachabilityFlagsConnectionOnTraffic
+     */
+    
+    
+    PNReachabilityCallback(self.serviceReachability, 0, NULL);
 }
 
 @end

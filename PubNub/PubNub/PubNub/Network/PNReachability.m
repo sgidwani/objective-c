@@ -259,7 +259,13 @@ PNReachabilityStatus PNReachabilityStatusForFlags(SCNetworkReachabilityFlags fla
  * This is reachability callback method which will be called by system network subsystem each time when it notice
  * that remote service changed it's reachability state
  */
+
+#ifdef PN_TESTING
+void PNReachabilityCallback(SCNetworkReachabilityRef reachability, SCNetworkReachabilityFlags flags, void *info);
+#else
 static void PNReachabilityCallback(SCNetworkReachabilityRef reachability, SCNetworkReachabilityFlags flags, void *info);
+#endif
+
 void PNReachabilityCallback(SCNetworkReachabilityRef reachability __unused, SCNetworkReachabilityFlags flags, void *info) {
     
     // Verify that reachability callback was called for correct client
