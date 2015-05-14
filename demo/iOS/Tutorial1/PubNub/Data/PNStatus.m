@@ -249,7 +249,7 @@
                                        @"Objects": @{@"Channels": (self.channels?: @"no channels"),
                                                      @"Channel groups": (self.groups?: @"no groups")},
                                        @"UUID": (self.uuid?: @"uknonwn"),
-                                       @"Authorization": (self.authorizationKey?: @"not set"),
+                                       @"Authorization": (self.authKey?: @"not set"),
                                        @"Time": @{@"Current": (self.currentTimetoken?: @(0)),
                                                   @"Previous": (self.previousTimetoken?: @(0))}}];
     
