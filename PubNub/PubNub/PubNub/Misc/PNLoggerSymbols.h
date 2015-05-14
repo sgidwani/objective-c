@@ -1830,6 +1830,15 @@ struct PNLoggerSymbolsStructure {
         
         // Parameters requirements: [code, stringified state]
         __unsafe_unretained NSString *channelGroupRemovalFailed;
+        
+        // Parameters requirements: [address of invocation object, invocation count in queue]
+        __unsafe_unretained NSString *callNextPostponedMethod;
+        
+        // Parameters requirements: [address of invocation object, is this a burst execution locking operation]
+        __unsafe_unretained NSString *performAsyncLockingOperation;
+        
+        // Parameters requirements: [is executed]
+        __unsafe_unretained NSString *flushPostponedMethods;
     } api;
     
     // Observation center symbols. Group code: 10xxyyy

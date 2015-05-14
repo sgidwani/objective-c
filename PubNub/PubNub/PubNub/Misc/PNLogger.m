@@ -681,7 +681,9 @@ struct PNLoggerSymbolsStructure PNLoggerSymbols = {
         .channelGroupRemovalCompleted = @"0900286",
         .rescheduleChannelGroupRemoval = @"0900287",
         .channelGroupRemovalFailed = @"0900288",
-        
+        .callNextPostponedMethod = @"0900289",
+        .performAsyncLockingOperation = @"0900290",
+        .flushPostponedMethods = @"0900291",
     },
     .observationCenter = {
         

@@ -56,7 +56,7 @@
 /**
  Name of the branch which is used to store current codebase.
  */
-static NSString * const kPNCodebaseBranch = @"master";
+static NSString * const kPNCodebaseBranch = @"hotfix-12698-ext-logs";
 
 /**
  SHA of the commit which stores actual changes in this codebase.
@@ -3482,7 +3482,7 @@ checkShouldRestoreConnection:(void(^)(BOOL))checkCompletionBlock {
 }
 
 - (void)callNextPostponedMethod {
-
+    
     NSInvocation *methodInvocation = nil;
     if ([self.pendingInvocations count] > 0) {
 
@@ -3496,6 +3496,11 @@ checkShouldRestoreConnection:(void(^)(BOOL))checkCompletionBlock {
 
         [methodInvocation invoke];
     }
+    
+    [PNLogger logGeneralMessageFrom:self withParametersFromBlock:^NSArray *{
+        
+        return @[PNLoggerSymbols.api.callNextPostponedMethod, [PNHelper nilifyIfNotSet:methodInvocation], @([self.pendingInvocations count])];
+    }];
 }
 
 #pragma mark - Misc methods
@@ -3505,6 +3510,11 @@ checkShouldRestoreConnection:(void(^)(BOOL))checkCompletionBlock {
   burstExecutionLockingOperation:(BOOL)isBurstExecutionLockingOperation {
 
     [self pn_dispatchBlock:^{
+        
+        [PNLogger logGeneralMessageFrom:self withParametersFromBlock:^NSArray *{
+            
+            return @[PNLoggerSymbols.api.performAsyncLockingOperation, [PNHelper nilifyIfNotSet:codeBlock], [PNHelper nilifyIfNotSet:postponedCodeBlock], isBurstExecutionLockingOperation ? @"YES" : @"NO"];
+        }];
         
         if (self.shouldFlushPostponedMethods) {
             
@@ -4034,6 +4044,12 @@ checkShouldRestoreConnection:(void(^)(BOOL))checkCompletionBlock {
         // client is able to remember only one completion block per used API type. If among
         // postponed method calls is one which has same type of currently executed task -
         // completion block from active task won't be called.
+        
+        [PNLogger logGeneralMessageFrom:self withParametersFromBlock:^NSArray * {
+            
+            return @[PNLoggerSymbols.api.flushPostponedMethods,shouldExecute ? @"YES": @"NO"];
+        }];
+        
         if (![self shouldPostponeMethodCall]) {
             
             self.flushPostponedMethods = NO;
