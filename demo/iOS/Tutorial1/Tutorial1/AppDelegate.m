@@ -113,11 +113,11 @@
 
 //
 //    // Get Presence Options
-//    NSLog(@"authKey: %@", self.client.presenceHeartbeatValue);
-//    NSLog(@"authKey: %@", self.client.presenceHeartbeatInterval);
+//    NSLog(@"presenceHeartbeatValue: %@", self.client.presenceHeartbeatValue);
+//    NSLog(@"presenceHeartbeatInterval: %@", self.client.presenceHeartbeatInterval);
 //
 //    // Get CipherKey
-//    NSLog(@"authKey: %@", self.client.cipherKey);
+//    NSLog(@"authKey: %@", self.client.authKey);
 
 
 }
