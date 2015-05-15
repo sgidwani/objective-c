@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "PubNub.h"
 #import "PNResult+Private.h"
+#import "PNLog.h"
 
 @interface AppDelegate () <PNObjectEventListener>
     @property (nonatomic, strong) PubNub *client;
@@ -18,12 +19,21 @@
 @implementation AppDelegate
 
 
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+
+    self.channel = @"myCh";
+
     // Initialize PubNub client.
-    self.channel = @"HelloiOS4.0";
-    self.client = [PubNub clientWithPublishKey:@"demo" andSubscribeKey:@"demo"];
+    self.client = [PubNub clientWithPublishKey:@"demo-36" andSubscribeKey:@"demo-36"];
     [self.client addListeners:@[self]];
+
+    [PNLog enableLogLevel:PNRequestLogLevel];
+
+    [self setOptions];
+    [self dumpOptions];
+
+
 
     // Time (Ping) to PubNub Servers
     [self.client timeWithCompletion:^(PNResult *result, PNStatus *status) {
@@ -36,6 +46,8 @@
         }
 
     }];
+
+
 
     [self.client subscribeToChannels:@[_channel] withPresence:YES andCompletion:^(PNStatus *status) {
         
@@ -65,6 +77,51 @@
     return YES;
 }
 
+- (void)setOptions {
+//// Set PubNub Options
+//    self.client.setTLSEnabled(YES);
+//    self.client.setOrigin(@"ios4.pubnub.com");
+//    self.client.setAuthKey(@"myAuthKey");
+//    self.client.setUUID(@"ios4.0Tutorial");
+//
+//    // Presence Settings
+//    self.client.setPresenceHeartbeatValue(120);
+//    self.client.setPresenceHeartbeatInterval(3);
+//
+//    // Cipher Key Settings
+//    self.client.setCipherKey(@"enigma");
+
+    // Time Token Handling Settings
+//    self.client.setKeepTimeTokenOnChannelChange(YES);
+//    self.client.setResubscribeOnConnectionRestore(YES);
+//    self.client.setCatchUpOnSubscriptionRestore(YES);
+
+}
+
+- (void)dumpOptions {
+//
+//    // Get PubNub Options
+//    NSLog(@"TLSEnabled: %@", self.client.TLSEnabled);
+//    NSLog(@"origin: %@", self.client.origin);
+//    NSLog(@"authKey: %@", self.client.authKey);
+//    NSLog(@"authKey: %@", self.client.uuid);
+
+    // Time Token Handling Settings
+//    NSLog(@"keepTimeTokenOnChannelChange: %@", self.client.keepTimeTokenOnChannelChange);
+//    NSLog(@"resubscribeOnConnectionRestore: %@", self.client.resubscribeOnConnectionRestore);
+//    NSLog(@"catchUpOnSubscriptionRestore: %@", self.client.catchUpOnSubscriptionRestore);
+
+//
+//    // Get Presence Options
+//    NSLog(@"authKey: %@", self.client.presenceHeartbeatValue);
+//    NSLog(@"authKey: %@", self.client.presenceHeartbeatInterval);
+//
+//    // Get CipherKey
+//    NSLog(@"authKey: %@", self.client.cipherKey);
+
+
+}
+
 - (void)client:(PubNub *)client didReceiveMessage:(PNResult *)message {
     
     NSLog(@"Did receive message: %@", message.data);
@@ -76,7 +133,8 @@
 }
 
 - (void)client:(PubNub *)client didReceiveStatus:(PNStatus *)status {
-    
+    NSLog(@"Did status: %@", status.data);
+
     // On expected disconnect. For example, channel changing
     if (status.category == PNDisconnectedCategory) {
         
