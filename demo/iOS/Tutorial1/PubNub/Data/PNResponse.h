@@ -33,6 +33,13 @@
 @property (nonatomic, readonly, copy) NSHTTPURLResponse *response;
 
 /**
+ @brief  Stores reference on original service response combined with passed response headers.
+
+ @since 4.0
+ */
+@property (nonatomic, readonly, strong) NSString *serviceResponse;
+
+/**
  @brief  Stores reference on body which has been received from \b PubNub service and pre-processed.
 
  @since 4.0

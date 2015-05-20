@@ -4,7 +4,6 @@
  @copyright © 2009-2015 PubNub, Inc.
  */
 #import "PNStatus+Private.h"
-#import <AFURLResponseSerialization.h>
 #import "PNPrivateStructures.h"
 #import "PNStatus+Private.h"
 #import "PNResult+Private.h"
@@ -12,7 +11,7 @@
 #import "PNLog.h"
 
 
-#pragma mark Private interface
+#pragma mark Protected interface declaration
 
 @interface PNStatus ()
 
@@ -144,7 +143,6 @@
     
     PNStatus *status = [[[self class] allocWithZone:zone] init];
     status.clientRequest = self.clientRequest;
-    status.headers = self.headers;
     status.response = self.response;
     status.statusCode = self.statusCode;
     status.operation = self.operation;
@@ -248,18 +246,6 @@
         
         switch (error.code) {
             case NSPropertyListReadCorruptError:
-                
-                category = PNMalformedResponseCategory;
-                break;
-                
-            default:
-                break;
-        }
-    }
-    else if ([error.domain isEqualToString:AFURLResponseSerializationErrorDomain]) {
-        
-        switch (error.code) {
-            case NSURLErrorBadServerResponse:
                 
                 category = PNMalformedResponseCategory;
                 break;

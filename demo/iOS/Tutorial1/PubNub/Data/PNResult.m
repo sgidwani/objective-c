@@ -28,7 +28,6 @@
     // Create result object based on status with new pre-processed data.
     PNResult *result = [self new];
     result->_clientRequest = [status.clientRequest copy];
-    result->_headers = [status.headers copy];
     result->_response = [status.response copy];
     result->_origin = [status.origin copy];
     result->_statusCode = status.statusCode;
@@ -46,8 +45,7 @@
         self.requestObject = request;
 
         self.clientRequest = request.response.clientRequest;
-        self.headers = [request.response.response allHeaderFields];
-        self.response = request.response.data;
+        self.response = request.response.serviceResponse;
         self.statusCode = (request.response.response ? request.response.response.statusCode : 200);
         self.operation = request.operation;
         self.origin = [[_clientRequest URL] host];
@@ -58,12 +56,12 @@
             
             if (self.requestObject.parseBlock) {
                 
-                self.data = (self.requestObject.parseBlock(self.response)?:
-                             [self dataParsedAsError:_response]);
+                self.data = (self.requestObject.parseBlock(request.response.data)?:
+                             [self dataParsedAsError:request.response.data]);
             }
             else {
                 
-                self.data = [self dataParsedAsError:self.response];
+                self.data = [self dataParsedAsError:request.response.data];
             }
         }
     }
@@ -127,7 +125,6 @@
                            @"POST Body size": @([self.clientRequest.HTTPBody length]),
                            @"Origin": (self.origin?: @"unknown")},
              @"Response": @{@"Status code": @(self.statusCode),
-                            @"Headers": (self.headers?: @"no headers"),
                             @"Raw data": (self.response?: @"no response"),
                             @"Processed data": (self.data?: @"no data")}};
 }

@@ -3,10 +3,9 @@
 
 
 /**
- @brief      Class which is used to describe error response from server or any non-request related
-             client state changes.
- @discussion In case of error this instance may contain service response in \c data. Also this 
-             object hold additional information about current client state.
+ @brief      Class which is used to describe request processing status.
+ @discussion Depending on used API type status may deliver error or \b PubNub service acknowledgment
+             response.
  
  @author Sergey Mamontov
  @since 4.0
@@ -35,14 +34,18 @@
 @property (nonatomic, readonly, assign, getter = isTLSEnabled) BOOL TLSEnabled;
 
 /**
- @brief  Stores reference on list of channels on which client currently subscribed.
+ @brief      Stores reference on list of channels on which client currently subscribed.
+ @discussion This property populated only for \c operation eaqual to \b PNSubscribeOperation or
+             \b PNUnsubscribeOperation.
  
  @since 4.0
  */
 @property (nonatomic, readonly, copy) NSArray *channels;
 
 /**
- @brief  Stores reference on channel group names list on which client currently subscribed.
+ @brief      Stores reference on channel group names list on which client currently subscribed.
+ @discussion This property populated only for \c operation eaqual to \b PNSubscribeOperation or
+             \b PNUnsubscribeOperation.
  
  @since 4.0
  */
@@ -81,15 +84,20 @@
 @property (nonatomic, readonly, assign, getter = isError) BOOL error;
 
 /**
- @brief  Stores reference on time token which has been used to establish current subscription cycle.
+ @brief      Stores reference on time token which has been used to establish current subscription 
+             cycle.
+ @discussion This property populated only for \c operation eaqual to \b PNSubscribeOperation or
+             \b PNUnsubscribeOperation.
  
  @since 4.0
  */
 @property (nonatomic, readonly, strong) NSNumber *currentTimetoken;
 
 /**
- @brief  Stores reference on previous key which has been used in subscription cycle to receive
-         \c currentTimetoken along with other events.
+ @brief      Stores reference on previous key which has been used in subscription cycle to receive
+             \c currentTimetoken along with other events.
+ @discussion This property populated only for \c operation eaqual to \b PNSubscribeOperation or
+             \b PNUnsubscribeOperation.
  
  @since 4.0
  */
@@ -116,7 +124,7 @@
 - (void)retry;
 
 /**
- @brief  For some requests client try to resend them to \b PubNub for processing.
+ @brief      For some requests client try to resend them to \b PubNub for processing.
  @discussion This method can be performed only on operations which respond with \c YES on
              \c willAutomaticallyRetry property. Other operation types will ignore method call.
 

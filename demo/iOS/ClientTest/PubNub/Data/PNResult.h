@@ -35,19 +35,12 @@
 @property (nonatomic, readonly, copy) NSURLRequest *clientRequest;
 
 /**
- @brief  Stores reference on headers which has been passed by \b PubNub service.
- 
- @since 4.0
- */
-@property (nonatomic, readonly, copy) NSDictionary *headers;
-
-/**
  @brief Stores reference on original (not processed) response body which hasn't been transformed 
         yet.
 
  @since 4.0
  */
-@property (nonatomic, readonly, copy) id response;
+@property (nonatomic, readonly, copy) NSString *response;
 
 /**
  @brief Stores reference on \b PubNub service host name or IP address against which \c request

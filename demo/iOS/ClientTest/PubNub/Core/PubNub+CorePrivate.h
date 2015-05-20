@@ -1,3 +1,8 @@
+/**
+ @author Sergey Mamontov
+ @since 4.0
+ @copyright © 2009-2015 PubNub, Inc.
+ */
 #import "PubNub+Core.h"
 #import <CocoaLumberjack/CocoaLumberjack.h>
 #import <AFNetworkReachabilityManager.h>
@@ -36,7 +41,7 @@ static DDLogLevel ddLogLevel = (DDLogLevel)(PNInfoLogLevel|PNReachabilityLogLeve
 
 
 ///------------------------------------------------
-/// @name Properties
+/// @name Information and Configuration
 ///------------------------------------------------
 
 /**
@@ -76,13 +81,6 @@ static DDLogLevel ddLogLevel = (DDLogLevel)(PNInfoLogLevel|PNReachabilityLogLeve
  */
 @property (nonatomic, readonly, assign) PNStatusCategory recentClientStatus;
 
-/**
- @brief Stores reference on session with pre-configured options useful for 'non-subscription' API 
-        group.
- 
- @since 4.0
- */
-@property (nonatomic, readonly, strong) AFHTTPSessionManager *serviceSession;
 
 
 ///------------------------------------------------
@@ -98,45 +96,6 @@ static DDLogLevel ddLogLevel = (DDLogLevel)(PNInfoLogLevel|PNReachabilityLogLeve
  @since 4.0
  */
 - (void)processRequest:(PNRequest *)request;
-
-/**
- @brief      Notify about request processing error.
- @discussion In most cases this method will be used by client itself to report about API calls
-             processing issues (incomplete or unacceptable parameters has been passed to methods).
-
- @since 4.0
- */
-- (void)handleRequestFailure:(PNRequest *)request withError:(NSError *)error;
-
-/**
- @brief  Handle successful request task execution with further building of result and status 
-         objects which will be distributed to the user.
- 
- @param request Reference on original request which has been used to build network request to PubNub
-                service.
- @param task    Reference on data download task which hold information about NSURL request used to
-                load data and server response information.
- @param data    Reference on data which has been downloaded in response for client request.
- 
- @since 4.0
- */
-- (void)handleRequestSuccess:(PNRequest *)request withTask:(NSURLSessionDataTask *)task
-                     andData:(id)data;
-
-/**
- @brief  Handle request task execution failure with further building of result and status objects 
-         which will be distributed to the user.
- 
- @param request Reference on original request which has been used to build network request to PubNub
-                service.
- @param task    Reference on data download task which hold information about NSURL request used to
-                load data and server response information.
- @param error   Reference on error which occurred while request executed.
- 
- @since 4.0
- */
-- (void)handleRequestFailure:(PNRequest *)request withTask:(NSURLSessionDataTask *)task
-                    andError:(NSError *)error;
 
 /**
  @brief  Terminate any long-poll based tasks.
@@ -191,6 +150,20 @@ static DDLogLevel ddLogLevel = (DDLogLevel)(PNInfoLogLevel|PNReachabilityLogLeve
  @since 4.0
  */
 - (void)completeStatusObject:(PNStatus *)status;
+
+
+///------------------------------------------------
+/// @name Handlers
+///------------------------------------------------
+
+/**
+ @brief      Notify about request processing error.
+ @discussion In most cases this method will be used by client itself to report about API calls
+             processing issues (incomplete or unacceptable parameters has been passed to methods).
+
+ @since 4.0
+ */
+- (void)handleRequestFailure:(PNRequest *)request withError:(NSError *)error;
 
 #pragma mark -
 

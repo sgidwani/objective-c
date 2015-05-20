@@ -125,7 +125,6 @@ static const void * kPNAESInitializationVector = "0123456789012345";
         }
     }
     
-    
     return [PNData base64StringFrom:processedData];
 }
 
@@ -201,7 +200,6 @@ static const void * kPNAESInitializationVector = "0123456789012345";
             DDLogAESError(@"<PubNub> Decryption error: %@", decryptionError);
         }
     }
-    
     
     return decryptedObject;
 }
@@ -292,7 +290,6 @@ static const void * kPNAESInitializationVector = "0123456789012345";
         *status = processingStatus;
     }
     
-    
     return [processedData copy];
 }
 
@@ -327,7 +324,6 @@ static const void * kPNAESInitializationVector = "0123456789012345";
         default:
             break;
     }
-    
     
     return [NSError errorWithDomain:kPNAESErrorDomain code:errorCode
                            userInfo:@{NSLocalizedDescriptionKey:description}];

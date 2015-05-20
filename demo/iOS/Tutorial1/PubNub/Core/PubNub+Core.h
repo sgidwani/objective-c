@@ -2,10 +2,6 @@
 #import "PNStructures.h"
 
 
-///------------------------------------------------
-/// @name Information and configuration
-///------------------------------------------------
-
 /**
  @brief      PubNub client core class which is responsible for communication with \b PubNub 
              services and responses processing.
@@ -18,10 +14,14 @@
  */
 @interface PubNub : NSObject
 
+
+///------------------------------------------------
+/// @name Information and configuration
+///------------------------------------------------
+
 /**
  @brief   Reference on host name or IP address which should be used by client to get access to
           \b PubNub services.
- 
  @default Client will use it's own constant (\b pubsub.pubnub.com) value if origin not
           specified.
 
@@ -45,8 +45,6 @@
           https://admin.pubnub.com
  @warning Can't be \c nil and in attempt to set \c nil will throw \b UnacceptableValue exception.
  
- @default Client will use it's own constant (\b demo) value if origin not specified.
- 
  @since 4.0
  */
 @property (nonatomic, copy) NSString *subscribeKey;
@@ -59,7 +57,6 @@
              and \c subscribeKey keys. Access can be limited to concrete users. \b PAM system
              use this key to check whether client user has rights to access to required service
              or not.
- 
  @default    By default this value set to \b nil.
  
  @since 4.0
@@ -73,7 +70,6 @@
              represent concrete client across server. This identifier is used for presence events
              to tell what some client joined or leaved live feed.
  @warning    There can't be two same client identifiers online at the same time.
- 
  @default    Client will use it's own-generated value if won't be specified by user.
  
  @since 4.0
@@ -105,7 +101,6 @@
              operations to check whether response potentially failed with 'timeout' or not.
  @discussion This is maximum time which client should wait fore response from \b PubNub service
              before reporting reuest error.
- 
  @default    Client will use it's own constant (\b 10 seconds) value if origin not specified.
  
  @since 4.0
@@ -120,7 +115,6 @@
              send to other subscribers \c 'timeout' presence event for this client.
  @note       This value can't be smaller then \b 5 seconds and larget then \b 300 seconds and 
              will be reset to it automatically.
- 
  @default    By default heartbeat functionality disabled.
  
  @since 4.0
@@ -131,8 +125,7 @@
  @brief   Reference on number of seconds which is used by client to issue heartbeat requests to
           \b PubNub service.
  @note    This vlaue should be smaller then \c presenceHeartbeatTimeout for better presence
-          control.
- 
+          control
  @default By default heartbeat functionality disabled.
  
  @since 4.0
@@ -142,7 +135,6 @@
 /**
  @brief   Stores whether client should communicate with \b PubNub services using secured
           connection or not.
- 
  @default By default client use \b YES to secure communication with \b PubNub services.
  
  @since 4.0
@@ -150,9 +142,8 @@
 @property (nonatomic, assign, getter = isTLSEnabled) BOOL TLSEnabled;
 
 /**
- @brief  Stores whether client should keep previous time token when subscribe on new set of remote
-         data objects live feeds.
- 
+ @brief   Stores whether client should keep previous time token when subscribe on new set of remote
+          data objects live feeds.
  @default By default client use \b YES to and previous time token will be used during subscription 
           on new data objects.
  
@@ -165,7 +156,6 @@
              after network connection restoring or not.
  @discussion If set to \c YES as soon as network connection will be restored client will restore
              subscription to previously subscribed remote data objects live feeds.
- 
  @default    By default client use \b YES to restore subscription on remote data objects live 
              feeds.
  
@@ -192,7 +182,6 @@
  @brief      Reference on queue on which completion/processing blocks will be called.
  @discussion At the end of each operation completion blocks will be called asynchronously on
              provided queue.
- 
  @default    By default all callback blocks will be called on main queue 
              (\c dispatch_get_main_queue()).
  

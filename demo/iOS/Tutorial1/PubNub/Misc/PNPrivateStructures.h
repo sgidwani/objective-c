@@ -71,4 +71,10 @@ static NSString * const PNHereNowDataStrings[3] = {
     [PNHereNowState] = @"occupancy, UUID and state"
 };
 
+
+typedef void(^PNTaskSuccessfulCompletionBlock)(NSURLSessionDataTask *task, id responseObject,
+                                               NSString *serviceResponse);
+typedef void(^PNTaskFailureCompletionBlock)(NSURLSessionDataTask *task, NSString *serviceResponse,
+                                            NSError *error);
+
 #endif // PNPrivateStructures_h

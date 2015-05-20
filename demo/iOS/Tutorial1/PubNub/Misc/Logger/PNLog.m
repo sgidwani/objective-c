@@ -5,6 +5,7 @@
  */
 #import "PNLog.h"
 #import "PNLogFileManager.h"
+#import "PNNetworkManager.h"
 #import "PubNub+Core.h"
 
 
@@ -72,10 +73,23 @@ static PNLog *_sharedInstance = nil;
 
 + (void)enableLogLevel:(PNLogLevel)logLevel {
     
+    if (logLevel & PNRequestLogLevel) {
+        
+        [DDLog setLevel:(DDLogLevel)PNRequestLogLevel forClass:[PNNetworkManager class]];
+        logLevel &= ~PNRequestLogLevel;
+    }
+    
     [self setLogLevel:([DDLog levelForClass:[PubNub class]] | logLevel)];
 }
 
 + (void)disableLogLevel:(PNLogLevel)logLevel {
+    
+    if (logLevel & PNRequestLogLevel) {
+        
+        [DDLog setLevel:([DDLog levelForClass:[PNNetworkManager class]] & ~PNRequestLogLevel)
+               forClass:[PNNetworkManager class]];
+        logLevel &= ~PNRequestLogLevel;
+    }
     
     [self setLogLevel:([DDLog levelForClass:[PubNub class]] & ~logLevel)];
 }

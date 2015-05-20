@@ -34,6 +34,7 @@
 		79A4D19D1AF8A6CF00F06E74 /* PNString.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A4D1991AF8A6CF00F06E74 /* PNString.m */; };
 		79A4D1A11AF8A88800F06E74 /* PNData.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A4D1A01AF8A88800F06E74 /* PNData.m */; };
 		79A4D1A61AF8F1BE00F06E74 /* PNChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A4D1A51AF8F1BE00F06E74 /* PNChannel.m */; };
+		79B1111C1B0BB986008651AD /* PNNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1111B1B0BB986008651AD /* PNNetworkManager.m */; };
 		79DCB42E1AF50E160078DF70 /* PNAES.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DCB4151AF50E160078DF70 /* PNAES.m */; };
 		79DCB42F1AF50E160078DF70 /* PNRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DCB4181AF50E160078DF70 /* PNRequest.m */; };
 		79DCB4301AF50E160078DF70 /* PNResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DCB41B1AF50E160078DF70 /* PNResult.m */; };
@@ -109,6 +110,8 @@
 		79A4D1A01AF8A88800F06E74 /* PNData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNData.m; sourceTree = "<group>"; };
 		79A4D1A41AF8F1BE00F06E74 /* PNChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNChannel.h; sourceTree = "<group>"; };
 		79A4D1A51AF8F1BE00F06E74 /* PNChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNChannel.m; sourceTree = "<group>"; };
+		79B1111A1B0BB986008651AD /* PNNetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNNetworkManager.h; sourceTree = "<group>"; };
+		79B1111B1B0BB986008651AD /* PNNetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNNetworkManager.m; sourceTree = "<group>"; };
 		79DCB4141AF50E160078DF70 /* PNAES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNAES.h; sourceTree = "<group>"; };
 		79DCB4151AF50E160078DF70 /* PNAES.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNAES.m; sourceTree = "<group>"; };
 		79DCB4161AF50E160078DF70 /* PNRequest+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PNRequest+Private.h"; sourceTree = "<group>"; };
@@ -276,11 +279,21 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		79B111191B0BB8ED008651AD /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				79B1111A1B0BB986008651AD /* PNNetworkManager.h */,
+				79B1111B1B0BB986008651AD /* PNNetworkManager.m */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
 		79DCB4121AF50E160078DF70 /* PubNub */ = {
 			isa = PBXGroup;
 			children = (
 				7989F4641AFA66140074D694 /* Core */,
 				79DCB4131AF50E160078DF70 /* Data */,
+				79B111191B0BB8ED008651AD /* Network */,
 				79DCB41E1AF50E160078DF70 /* Misc */,
 				79DCB4291AF50E160078DF70 /* PubNub.h */,
 			);
@@ -301,9 +314,9 @@
 				79DCB41D1AF50E160078DF70 /* PNStatus.m */,
 				79DCB4141AF50E160078DF70 /* PNAES.h */,
 				79DCB4151AF50E160078DF70 /* PNAES.m */,
+				DD71B1BAA3991F496FC7CCD7 /* PNResponse+Private.h */,
 				DD71B15C16A5EC6F253DBB4C /* PNResponse.h */,
 				DD71B2AA0D58BD27A8B930A0 /* PNResponse.m */,
-				DD71B1BAA3991F496FC7CCD7 /* PNResponse+Private.h */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -490,6 +503,7 @@
 				794BABDD1AF4EB33004D5E07 /* ViewController.m in Sources */,
 				7989F47B1AFA66140074D694 /* PubNub+APNS.m in Sources */,
 				7989F4831AFA66140074D694 /* PubNub+Time.m in Sources */,
+				79B1111C1B0BB986008651AD /* PNNetworkManager.m in Sources */,
 				791C3A981B015B8C0067B781 /* PNLog.m in Sources */,
 				791C3A991B015B8C0067B781 /* PNLogFileManager.m in Sources */,
 				79A4D19B1AF8A6CF00F06E74 /* PNGZIP.m in Sources */,
