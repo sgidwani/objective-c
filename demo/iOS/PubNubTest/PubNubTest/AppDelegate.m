@@ -7,11 +7,8 @@
 //
 
 #import "AppDelegate.h"
-#import "PNTestManager.h"
 
 @interface AppDelegate ()
-
-@property (nonatomic) PNTestManager *testManager;
 
 @end
 
