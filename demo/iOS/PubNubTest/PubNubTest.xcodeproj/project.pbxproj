@@ -10,6 +10,7 @@
 		0F19745A5C091FD1AB0F5067 /* libPods-PubNubTestTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 556283418F9753434054E4D2 /* libPods-PubNubTestTests.a */; };
 		1C04733DB9398B2519244EDA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DD086142799BE46D6F6A432 /* libPods.a */; };
 		5112514D1B0FCD360083FDC1 /* PNTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5112514C1B0FCD360083FDC1 /* PNTestHelper.m */; };
+		5112514F1B0FE0720083FDC1 /* PNPublishTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5112514E1B0FE0720083FDC1 /* PNPublishTest.m */; };
 		9671F0B51AFCB1430037E226 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9671F0B41AFCB1430037E226 /* main.m */; };
 		9671F0B81AFCB1430037E226 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9671F0B71AFCB1430037E226 /* AppDelegate.m */; };
 		9671F0C01AFCB1440037E226 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9671F0BF1AFCB1440037E226 /* Images.xcassets */; };
@@ -30,6 +31,7 @@
 /* Begin PBXFileReference section */
 		5112514B1B0FCD360083FDC1 /* PNTestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNTestHelper.h; sourceTree = "<group>"; };
 		5112514C1B0FCD360083FDC1 /* PNTestHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNTestHelper.m; sourceTree = "<group>"; };
+		5112514E1B0FE0720083FDC1 /* PNPublishTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNPublishTest.m; sourceTree = "<group>"; };
 		556283418F9753434054E4D2 /* libPods-PubNubTestTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PubNubTestTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		684254C6D944753EB69995E7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		847B40DF2778B95F8E3F5DAD /* Pods-PubNubTestTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PubNubTestTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PubNubTestTests/Pods-PubNubTestTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				9688CAAC1B0A3B59003BA07F /* PNChannelGroupTests.m */,
+				5112514E1B0FE0720083FDC1 /* PNPublishTest.m */,
 			);
 			path = CoreTests;
 			sourceTree = "<group>";
@@ -340,6 +343,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9688CAB51B0A3B59003BA07F /* PNChannelGroupTests.m in Sources */,
+				5112514F1B0FE0720083FDC1 /* PNPublishTest.m in Sources */,
 				5112514D1B0FCD360083FDC1 /* PNTestHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
