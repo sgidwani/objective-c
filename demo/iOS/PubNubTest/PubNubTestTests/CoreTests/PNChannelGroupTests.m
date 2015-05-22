@@ -9,152 +9,163 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <PubNub/PubNub.h>
-#import "TestConfigurator.h"
 
 @interface PNChannelGroupTests : XCTestCase
-
+@property (nonatomic) PubNub *client;
 @end
 
-@implementation PNChannelGroupTests  {
-    
-    PubNub *_pubNub;
-    BOOL _isTestError;
-}
-
+@implementation PNChannelGroupTests
 
 - (void)setUp {
     
     [super setUp];
     
-    _pubNub = [PubNub clientWithPublishKey:[[TestConfigurator shared] mainPubKey] andSubscribeKey:[[TestConfigurator shared] mainSubKey]];
-    _pubNub.uuid = @"testUUID";
+    self.client = [PubNub clientWithPublishKey:@"demo-36" andSubscribeKey:@"demo-36"];
 }
 
 - (void)tearDown {
-    
-    _pubNub =nil;
+    self.client = nil;
     [super tearDown];
 }
 
-- (void)testChannelGroup {
-    
-    // Add channels to group
-    XCTestExpectation *_addChannelsExpectation = [self expectationWithDescription:@"Adding channels"];
-    
-    [_pubNub addChannels:@[@"testChannel1", @"testChannel2"] toGroup:@"testGroup" withCompletion:^(PNStatus *status) {
-
-        if (status.isError) {
-            
-            _isTestError = YES;
-            NSLog(@"!!! Error during adding channels %@", status.data);
-        }
-        [_addChannelsExpectation fulfill];
+- (void)testAddChannelGroups {
+    XCTestExpectation *addChannelsExpectation = [self expectationWithDescription:@"add channels"];
+    NSString *channel1 = @"a";
+    NSString *channel2 = @"c";
+    NSString *channelGroup = [[NSUUID UUID] UUIDString];
+    [self.client addChannels:@[channel1, channel2] toGroup:channelGroup withCompletion:^(PNStatus *status) {
+        XCTAssertFalse(status.error);
+        [addChannelsExpectation fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:[[TestConfigurator shared] testTimeout] handler:^(NSError *error) {
-        
+    [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
         if (error) {
-            
-            XCTFail(@"Timeout is fired");
-            _isTestError = YES;
+            NSLog(@"error: %@", error);
         }
+        XCTAssertNil(error);
     }];
     
-    if (_isTestError) {
-        
-        XCTFail(@"Error occurs during adding channels to group");
-        return;
-    }
- 
-    // Get channels from group
-     XCTestExpectation *_getChannelsExpectation = [self expectationWithDescription:@"Getting channels for group"];
-    
-    [_pubNub channelsForGroup:@"testGroup" withCompletion:^(PNResult *result, PNStatus *status) {
-        
-        if (status.isError) {
-            
-            _isTestError = YES;
-
-            XCTFail(@"Error occurs during getting channels for group %@", status.data);
+    XCTestExpectation *confirmAddedChannelsExpectation = [self expectationWithDescription:@"channels added"];
+    [self.client channelsForGroup:channelGroup withCompletion:^(PNResult *result, PNStatus *status) {
+        XCTAssertFalse(status.error);
+        XCTAssertNotNil(result);
+        NSDictionary *data = result.data;
+        XCTAssertNotNil(data[@"channels"]);
+        NSMutableArray *channelsToCompare = [@[channel1, channel2] mutableCopy];
+        for (NSString *channelName in data[@"channels"]) {
+            if ([channelsToCompare containsObject:channelName]) {
+                [channelsToCompare removeObject:channelName];
+            }
         }
-        [_getChannelsExpectation fulfill];
+        XCTAssertTrue([channelsToCompare count] == 0);
+        [confirmAddedChannelsExpectation fulfill];
     }];
     
-    // Get group
-    XCTestExpectation *_getGroupsExpectation = [self expectationWithDescription:@"Getting groups"];
-    
-    [_pubNub channelGroupsWithCompletion:^(PNResult *result, PNStatus *status) {
-        
-        if (status.isError) {
-            
-            XCTFail(@"Error occurs during getting groups %@", status.data);
-        }
-        [_getGroupsExpectation fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:[[TestConfigurator shared] testTimeout] handler:^(NSError *error) {
-        
+    [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
         if (error) {
-            
-            XCTFail(@"Timeout is fired");
-            _isTestError = YES;
+            NSLog(@"error: %@", error);
         }
+        XCTAssertNil(error);
     }];
-    
-    if (_isTestError) {
-        
-        XCTFail(@"Error occurs during getting info");
-        return;
-    }
-   
-    
-    // Remove channels from group
-    XCTestExpectation *_removeChannelsExpectation = [self expectationWithDescription:@"Removing channels from group"];
-    
-    [_pubNub removeChannels:@[@"testChannel1"] fromGroup:@"testGroup" withCompletion:^(PNStatus *status) {
+}
 
-        if (status.isError) {
-            
-            XCTFail(@"Error occurs during removing channels from group %@", status.data);
-        }
-        [_removeChannelsExpectation fulfill];
+- (void)testRemoveSomeChannelsFromChannelGroup {
+    XCTestExpectation *addChannelsExpectation = [self expectationWithDescription:@"add channels"];
+    NSString *channel1 = @"a";
+    NSString *channel2 = @"c";
+    NSString *channelGroup = [[NSUUID UUID] UUIDString];
+    [self.client addChannels:@[channel1, channel2] toGroup:channelGroup withCompletion:^(PNStatus *status) {
+        XCTAssertFalse(status.error);
+        [addChannelsExpectation fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:[[TestConfigurator shared] testTimeout] handler:^(NSError *error) {
-        
+    [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
         if (error) {
-            
-            XCTFail(@"Timeout is fired");
-            _isTestError = YES;
+            NSLog(@"error: %@", error);
         }
+        XCTAssertNil(error);
     }];
     
-    if (_isTestError) {
-        
-        return;
-    }
-
-    
-    // Remove group
-    XCTestExpectation *_removeGroupExpectation = [self expectationWithDescription:@"Removing group"];
-    
-    [_pubNub removeChannelsFromGroup:@"testGroup" withCompletion:^(PNStatus *status) {
-
-        if (status.isError) {
-            
-             XCTFail(@"Error occurs during removing group %@", status.data);
-            _isTestError = YES;
-        }
-        [_removeGroupExpectation fulfill];;
+    XCTestExpectation *removeChannelExpectation = [self expectationWithDescription:@"remove channel"];
+    [self.client removeChannels:@[channel1] fromGroup:channelGroup withCompletion:^(PNStatus *status) {
+        XCTAssertFalse(status.error);
+        [removeChannelExpectation fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:[[TestConfigurator shared] testTimeout] handler:^(NSError *error) {
-        
+    [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
         if (error) {
-            
-            XCTFail(@"Timeout is fired");
-            _isTestError = YES;
+            NSLog(@"error: %@", error);
         }
+        XCTAssertNil(error);
+    }];
+    
+    XCTestExpectation *checkChannelsExpectation = [self expectationWithDescription:@"check channel removal"];
+    [self.client channelsForGroup:channelGroup withCompletion:^(PNResult *result, PNStatus *status) {
+        XCTAssertFalse(status.error);
+        XCTAssertNotNil(result);
+        NSDictionary *data = result.data;
+        XCTAssertNotNil(data[@"channels"]);
+        NSArray *channels = data[@"channels"];
+        XCTAssertTrue([channels count] == 1);
+        XCTAssertTrue([channels containsObject:channel2]);
+        XCTAssertFalse([channels containsObject:channel1]);
+        [checkChannelsExpectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"error: %@", error);
+        }
+        XCTAssertNil(error);
+    }];
+}
+
+- (void)testRemoveAllChannelsFromChannelGroup {
+    XCTestExpectation *addChannelsExpectation = [self expectationWithDescription:@"add channels"];
+    NSString *channel1 = @"a";
+    NSString *channel2 = @"c";
+    NSString *channelGroup = [[NSUUID UUID] UUIDString];
+    [self.client addChannels:@[channel1, channel2] toGroup:channelGroup withCompletion:^(PNStatus *status) {
+        XCTAssertFalse(status.error);
+        [addChannelsExpectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"error: %@", error);
+        }
+        XCTAssertNil(error);
+    }];
+    
+    XCTestExpectation *removeAllChannelsExpectation = [self expectationWithDescription:@"remove channel"];
+    [self.client removeChannelsFromGroup:channelGroup withCompletion:^(PNStatus *status) {
+        XCTAssertFalse(status.error);
+        [removeAllChannelsExpectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"error: %@", error);
+        }
+        XCTAssertNil(error);
+    }];
+    
+    XCTestExpectation *checkChannelsExpectation = [self expectationWithDescription:@"check channel removal"];
+    [self.client channelsForGroup:channelGroup withCompletion:^(PNResult *result, PNStatus *status) {
+        XCTAssertFalse(status.error);
+        XCTAssertNotNil(result);
+        NSDictionary *data = result.data;
+        XCTAssertNotNil(data[@"channels"]);
+        NSArray *channels = data[@"channels"];
+        XCTAssertTrue([channels count] == 0);
+        [checkChannelsExpectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"error: %@", error);
+        }
+        XCTAssertNil(error);
     }];
 }
 
