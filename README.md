@@ -1,4 +1,4 @@
-# PubNub 4.0b1 for iOS 7+
+# PubNub 4.0b1 for iOS 7+ (Beta, not for Production Use)
 
 ## Changes from 3.x
 * 4.0 is a non-bw compatible REWRITE with 96% less lines of code than our 3.x!
