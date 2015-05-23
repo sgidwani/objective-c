@@ -27,6 +27,8 @@
 * Constantize / Objectize result.data keys
 * Provide Swift Bridge and associated docs
 * Provide standalone framework and static library versions of lib
+* Move testing from separate 'PubNubTests' project and into actual framework project
+* Add automated integration testing
 * Approach >= 80% automated test code coverage as we approach final beta
 
 ## Installing the Source
