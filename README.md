@@ -1,6 +1,6 @@
 # PubNub 4.0b1 for iOS 7+
 
-### Changes from 3.x
+## Changes from 3.x
 * 4.0 is a non-bw compatible REWRITE with 96% less lines of code than our 3.x!
 * Removed support for iOS 6 and earlier
 * Removed support for JSONKit
@@ -11,7 +11,7 @@
 * Replaced configuration class with setter configuration pattern
 * Consolidated instance method names
  
-### Known issues and TODOs in beta1:
+## Known issues and TODOs in beta1:
 
 * Needs better handling for invalid API keys (right now fails with undefined error)
 * Client should not allow duplicate channel names in subscribe field
@@ -131,3 +131,21 @@ You should now have a skeleton PubNub project.
 * If you have a [web console running](http://www.pubnub.com/console/?channel=myChannel&origin=d.pubnub.com&sub=demo&pub=demo), you can receive the hello world messages sent from your iOS app, as well as send messages from the web console, and see them appear in the didReceiveMessage listener!
 
 Run the app, and watch it work!
+
+## New in 4.0 -- Result and Status Event Objects
+
+In 4.0, we introduce the concept of Status and Result events. For every PubNub operation you call, you will be returned either a Result, or a Status, but not both.
+
+Status objects inherit from Result objects, so both contain common information like raw request, raw response, HTTP response code information, etc.
+
+On the Result object, if you dig deeper into the data attribute, you can get information specific to the request. 
+
+For example, when you make a history call, when the call is successful, you would receive a history Result object containing (within the data attribute) the messages, start, and end timetokens. 
+
+If there was an error, such as a PAM error, you would receive instead a Status object. Status.category explains the type of Status (PAM, Timeout, Acknowledgement info, Connection Status (Connect, Reconnect, Disconnect), etc), Status.isError describes the severity of the Status (whether its merely informational and can be safely ignored without consequence, or whether the operation of your  application is affected).
+
+In Beta1, [we provide Tutorial1](https://github.com/pubnub/objective-c/tree/4.0/demo/iOS/Tutorial1) as a generic reference on how to set config options, make Pub, Sub, and History calls (with and without PAM), and handle the various Status and Result events that may arise from them.  
+
+As we approach final beta, Tutorial1 demo app will increase in breadth, and also be accompanied by more detailed tutorials. 
+
+If you have questions about how the Result and Status objects work in the meantime, feel free to contact support@pubnub.com and cc: geremy@pubnub.com, and we'll be happy to assist.
