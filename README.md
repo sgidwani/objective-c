@@ -50,7 +50,7 @@ pod 'CocoaLumberjack'
 pod 'PubNub', :path => '/Users/gcohen/clients/objective-c'
 ```
 
-* Be sure the path argument in the Podfile is pointing to the parent directory the PubNub source directory lives in.
+* Be sure the path argument in the Podfile is pointing to the [parent directory](https://github.com/pubnub/objective-c/tree/4.0b1) the [PubNub source directory](https://github.com/pubnub/objective-c/tree/4.0b1/PubNub) lives in.
 
 * Run:
  ```
