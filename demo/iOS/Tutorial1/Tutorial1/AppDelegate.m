@@ -42,14 +42,20 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
+#pragma mark - PAM Use Case Config
+
     // Settings Config for PAM Example
+    // Uncomment this section line for a PAM use-case example
+
     // http://www.pubnub.com/console/?channel=good&origin=d.pubnub.com&sub=pam&pub=pam&cipher=&ssl=false&secret=pam&auth=myAuthKey
 
-//    self.channel1 = @"bad";
-//    self.channel2 = @"good";
-//    self.pubKey = @"pam";
-//    self.subKey = @"pam";
-//    self.authKey = @"myAuthKey";
+    // self.channel1 = @"bad";
+    // self.channel2 = @"good";
+    // self.pubKey = @"pam";
+    // self.subKey = @"pam";
+    // self.authKey = @"myAuthKey";
+
+#pragma mark - Non-PAM Use Case Config
 
     // Settings Config for Non-PAM Example
     self.channel1 = @"bot";
@@ -58,7 +64,6 @@
     self.subKey = @"demo-36";
     self.authKey = @"myAuthKey";
 
-
     [self tireKicker];
     return YES;
 }
@@ -66,7 +71,7 @@
 - (void)tireKicker {
     [self pubNubInit];
     [self pubNubTime];
-    //[self pubNubHistory];
+    [self pubNubHistory];
     [self pubNubSubscribe];
 }
 
@@ -84,18 +89,6 @@
     [self printClientConfiguration];
 }
 
-//- (void)delayedSub {
-//    NSLog(@"Timer Called");
-//    [self.client subscribeToChannels:@[_channel2] withPresence:NO andCompletion:^(PNStatus *status) {
-//        if (!status.isError) {
-//            NSLog(@"^^^^Second Subscribe request succeeded at timetoken %@.", status.currentTimetoken);
-//        } else {
-//            NSLog(@"^^^^Second Subscribe request did not succeed. All subscribe operations will autoretry when possible.");
-//            [self handleStatus:status];
-//        }
-//    }];
-//}
-
 - (void)pubNubSubscribe {
     // Subscribe
 
@@ -112,7 +105,6 @@
 
         if (!status.isError) {
             NSLog(@"^^^^Subscribe request succeeded at timetoken %@.", status.currentTimetoken);
-            //self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(delayedSub) userInfo:nil repeats:NO];
         } else {
             NSLog(@"^^^^Second Subscribe request did not succeed. All subscribe operations will autoretry when possible.");
             [self handleStatus:status];
