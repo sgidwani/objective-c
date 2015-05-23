@@ -127,3 +127,5 @@ You should now have a skeleton PubNub project.
 ```
 
 * If you have a [web console running](http://www.pubnub.com/console/?channel=myChannel&origin=d.pubnub.com&sub=demo&pub=demo), you can receive the hello world messages sent from your iOS app, as well as send messages from the web console, and see them appear in the didReceiveMessage listener!
+
+Run the app, and watch it work!
