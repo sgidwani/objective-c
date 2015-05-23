@@ -86,6 +86,7 @@ You should now have a skeleton PubNub project.
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     self.client = [PubNub clientWithPublishKey:@"demo" andSubscribeKey:@"demo"];
+    [self.client addListeners:@[self]];
 
     [self.client subscribeToChannels:@[@"myChannel"] withPresence:NO andCompletion:^(PNStatus *status) {
         
@@ -111,3 +112,18 @@ You should now have a skeleton PubNub project.
     return YES;
 }
 ```
+
+* Add a message listener method to your AppDelegate.m:
+
+```objective-c
+- (void)client:(PubNub *)client didReceiveMessage:(PNResult *)message withStatus:(PNStatus *)status {
+    
+    if (status) {
+        // analyze the status object for next steps -- See Tutorial1 for in-depth examples
+    } else if (message) {
+        NSLog(@"Received message: %@", message.data);
+    }
+}
+```
+
+* If you have a [web console running](http://www.pubnub.com/console/?channel=myChannel&origin=d.pubnub.com&sub=demo&pub=demo), you can receive the hello world messages sent from your iOS app, as well as send messages from the web console, and see them appear in the didReceiveMessage listener!
