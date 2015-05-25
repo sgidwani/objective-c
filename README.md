@@ -144,7 +144,7 @@ For example, when you make a history call, when the call is successful, you woul
 
 If there was an error, such as a PAM error, you would receive instead a Status object. Status.category explains the type of Status (PAM, Timeout, Acknowledgement info, Connection Status (Connect, Reconnect, Disconnect), etc), Status.isError describes the severity of the Status (whether its merely informational and can be safely ignored without consequence, or whether the operation of your  application is affected).
 
-In Beta1, [we provide Tutorial1](https://github.com/pubnub/objective-c/tree/4.0/demo/iOS/Tutorial1) as a generic reference on how to set config options, make Pub, Sub, and History calls (with and without PAM), and handle the various Status and Result events that may arise from them.  
+In Beta1, [we provide Tutorial1](https://github.com/pubnub/objective-c/tree/4.0b1/demo/iOS/Tutorial1) as a generic reference on how to set config options, make Pub, Sub, and History calls (with and without PAM), and handle the various Status and Result events that may arise from them.  
 
 As we approach final beta, Tutorial1 demo app will increase in breadth, and also be accompanied by more detailed tutorials. 
 
