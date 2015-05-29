@@ -72,6 +72,12 @@
     [self pubNubInit];
     [self pubNubTime];
     [self pubNubHistory];
+    [self pubNubHereNow];
+    [self pubNubCGAdd];
+    [self pubNubCGRemoveAllChannels];
+    [self pubNubCGRemoveSomeChannels];
+    [self pubNubWhereNow];
+
     [self pubNubSubscribe];
 }
 
@@ -112,6 +118,74 @@
     }];
 }
 
+- (void)pubNubWhereNow {
+    [self.client whereNowUUID:@"12345" withCompletion:^(PNResult *result, PNStatus *status) {
+        if (status) {
+            // As a status, this contains error or non-error information about the history request, but not the actual history data I requested.
+            // Timeout Error, PAM Error, etc.
+
+            [self handleStatus:status];
+        }
+        else if (result) {
+            // As a result, this contains the messages, start, and end timetoken in the data attribute
+
+            NSLog(@"^^^^ Loaded whereNow data: %@", result.data);  // TODO: Call out data attributes here
+        }
+    }];
+}
+
+- (void)pubNubCGRemoveSomeChannels {
+    [self.client removeChannels:@[_channel2] fromGroup:@"myChannelGroup" withCompletion:^(PNStatus *status) {
+        if (!status.isError) {
+            NSLog(@"^^^^CG Remove Some Channels request succeeded at timetoken %@.", status.currentTimetoken);
+        } else {
+            NSLog(@"^^^^CG Remove Some Channels request did not succeed. All subscribe operations will autoretry when possible.");
+            [self handleStatus:status];
+        }
+    }];
+}
+
+- (void)pubNubCGRemoveAllChannels {
+    [self.client removeChannelsFromGroup:@"myChannelGroup" withCompletion:^(PNStatus *status) {
+        if (!status.isError) {
+            NSLog(@"^^^^CG Remove All Channels request succeeded at timetoken %@.", status.currentTimetoken);
+        } else {
+            NSLog(@"^^^^CG Remove All Channels request did not succeed. All subscribe operations will autoretry when possible.");
+            [self handleStatus:status];
+        }
+    }];
+}
+
+
+- (void)pubNubCGAdd {
+    [self.client addChannels:@[_channel1, _channel2] toGroup:@"myChannelGroup" withCompletion:^(PNStatus *status) {
+
+        if (!status.isError) {
+            NSLog(@"^^^^CGAdd request succeeded at timetoken %@.", status.currentTimetoken);
+        } else {
+            NSLog(@"^^^^CGAdd Subscribe request did not succeed. All subscribe operations will autoretry when possible.");
+            [self handleStatus:status];
+        }
+
+    }];
+}
+- (void)pubNubHereNow {
+    [self.client hereNowForChannel:_channel1 withCompletion:^(PNResult *result, PNStatus *status) {
+
+        if (status) {
+            // As a status, this contains error or non-error information about the history request, but not the actual history data I requested.
+            // Timeout Error, PAM Error, etc.
+
+            [self handleStatus:status];
+        }
+        else if (result) {
+            // As a result, this contains the messages, start, and end timetoken in the data attribute
+
+            NSLog(@"^^^^ Loaded hereNowForChannel data: %@", result.data);  // TODO: Call out data attributes here
+        }
+
+    }];
+}
 - (void)pubNubHistory {
     // History
 
