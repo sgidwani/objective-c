@@ -8,6 +8,7 @@
 
 #import "PNAppDelegate.h"
 #import <PubNub/PubNub.h>
+#import <JSZVCR/JSZVCR.h>
 
 #pragma mark Private interface declaration
 
@@ -40,7 +41,8 @@
 @implementation PNAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
+    [JSZVCR swizzleNSURLSessionClasses];
+    [NSDateFormatter]
 #pragma mark - PAM Use Case Config
 
     // Settings Config for PAM Example
@@ -84,6 +86,10 @@
 //    [self pubNubSubscribeWithState];
 //    [self pubNubSubscribeToPresence];
 
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+    [[JSZVCR sharedInstance] dumpRecordingsToFile:@"file"];
 }
 
 - (void)pubNubSetRandomState{
