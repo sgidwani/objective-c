@@ -1,8 +1,8 @@
 //
-//  PNSubscribeTests.m
+//  PNBatchedSubscribeTests.m
 //  PubNub Tests
 //
-//  Created by Jordan Zucker on 6/16/15.
+//  Created by Jordan Zucker on 6/22/15.
 //
 //
 
@@ -12,18 +12,19 @@
 
 #import "PNBasicSubscribeTestCase.h"
 
-@interface PNSubscribeTests : PNBasicSubscribeTestCase <PNObjectEventListener>
+@interface PNBatchedSubscribeTests : PNBasicSubscribeTestCase
 @end
 
-@implementation PNSubscribeTests
+@implementation PNBatchedSubscribeTests
 
 - (BOOL)isRecording {
-    return NO;
+    return YES;
 }
 
-- (void)testSimpleSubscribe {
+- (void)testBatchedSubscribes {
     self.subscribeExpectation = [self expectationWithDescription:@"network"];
-    [self.client subscribeToChannels:@[@"a"] withPresence:NO];
+    [self.client subscribeToChannels:@[@"a", @"b"] withPresence:YES];
+    [self.client subscribeToChannels:@[@"c"] withPresence:NO];
     [self waitForExpectationsWithTimeout:10 handler:^(NSError *error) {
         if (error) {
             NSLog(@"error: %@", error);
