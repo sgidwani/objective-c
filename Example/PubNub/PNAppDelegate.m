@@ -100,64 +100,65 @@
 
 #pragma mark - Time
 
-    [self pubNubTime];
+//    [self pubNubTime];
 
 #pragma mark - Publish
-    [self pubNubPublish];
+//    [self pubNubPublish];
 
 #pragma mark - History
 
-    [self pubNubHistory];
+//    [self pubNubHistory];
 
 #pragma mark - Channel Groups Subscribe / Unsubscribe
 
-    [self pubNubSubscribeToChannelGroup];
-    [self pubNubUnsubFromChannelGroups];
+//    [self pubNubSubscribeToChannelGroup];
+//    [self pubNubUnsubFromChannelGroups];
+    [self subToMany];
 
 #pragma mark - Channel Subscribe / Unsubscribe
 
     [self pubNubSubscribeToChannels];
-    [self pubNubUnsubscribeFromChannels];
+    //[self pubNubUnsubscribeFromChannels];
 
 #pragma mark - Presence Subscribe / Unsubscribe
 
-    [self pubNubSubscribeToPresence];
-    [self pubNubUnsubFromPresence];
+//    [self pubNubSubscribeToPresence];
+//    [self pubNubUnsubFromPresence];
 
 #pragma mark - Here Nows
 
-    [self pubNubHereNowForChannel];
-    [self pubNubGlobalHereNow];
-    [self pubNubHereNowForChannelGroups];
-    [self pubNubWhereNow];
+//    [self pubNubHereNowForChannel];
+//    [self pubNubGlobalHereNow];
+//    [self pubNubHereNowForChannelGroups];
+//    [self pubNubWhereNow];
 
 #pragma mark - CG Admin
 
-    [self pubNubCGAdd];
-    [self pubNubChannelsForGroup];
-    [self pubNubCGRemoveAllChannels];
-    [self pubNubCGRemoveSomeChannels];
+//    [self pubNubCGAdd];
+//    [self pubNubChannelsForGroup];
+//    [self pubNubCGRemoveAllChannels];
+//    [self pubNubCGRemoveSomeChannels];
 
 #pragma mark - State Admin
-    [self pubNubSetState];
-    [self pubNubGetState];
+//    [self pubNubSetState];
+//    [self pubNubGetState];
 
 
 #pragma mark - 3rd Party Push Notifications Admin
 
-    [self pubNubAddPushNotifications];
-    [self pubNubRemovePushNotification];
-    [self pubNubRemoveAllPushNotifications];
-    [self pubNubGetAllPushNotifications];
+//    [self pubNubAddPushNotifications];
+//    [self pubNubRemovePushNotification];
+//    [self pubNubRemoveAllPushNotifications];
+//    [self pubNubGetAllPushNotifications];
 
 #pragma mark - Public Encryption/Decryption Methods
 
-    [self pubNubAESDecrypt];
-    [self pubNubAESEncrypt];
+//    [self pubNubAESDecrypt];
+//    [self pubNubAESEncrypt];
 
 #pragma mark - Message Size Check Methods
 
-    [self pubNubSizeOfMessage];
+    //[self pubNubSizeOfMessage];
 
 }
 
@@ -272,6 +273,13 @@
     /*
     [self.client subscribeToChannelGroups:@[_channelGroup1] withPresence:YES clientState:@{@"foo":@"bar"}];
      */
+
+}
+
+- (void)subToMany {
+
+    [self.client subscribeToChannels:@[@"foo", @"bar"] withPresence:YES clientState:@{@"foo":@{@"foo":@"bar"}, @"bar":@{@"foo":@"bar"}}];
+    [self.client subscribeToChannels:@[@"baz"] withPresence:NO];
 
 }
 
@@ -437,7 +445,7 @@
         else if (result) {
             // As a result, this contains the messages, start, and end timetoken in the data attribute
 
-            NSLog(@"Loaded history data: %@ with start %@ and end %@", result.data.messages, result.data.start, result.data.end);
+            NSLog(@"Loaded history data %@ with start %@ and end %@", result.data.messages, result.data.start, result.data.end);
         }
     }];
 
