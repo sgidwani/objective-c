@@ -54,7 +54,7 @@ private
 def run_tests(scheme, sdk, destination)
     sim_destination = "-destination \'#{destination}\'"
     sh("xcodebuild -workspace PubNub.xcworkspace -scheme '#{scheme}' -sdk '#{sdk}' #{sim_destination} -configuration 'Debug' clean test | xcpretty -c; exit ${PIPESTATUS[0]}") rescue nil
-endi
+end
 
 def update_exit_status()
   return $?.exitstatus
