@@ -1,7 +1,11 @@
 namespace :test do
 
+  task :prepare do
+    sh("slather setup Tests/PubNub\ Tests.xcodeproj/")
+  end
+
   desc "Run the PubNub Integration Tests for iOS"
-  task :ios do
+  task :ios => :prepare do
     simulators = get_ios_simulators
     destinations = Array.new
     # collect all sims except for "Resizable sims"
