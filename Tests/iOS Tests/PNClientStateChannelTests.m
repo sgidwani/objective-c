@@ -45,20 +45,29 @@
                               [NSSet setWithArray:expectedPresenceSubscriptions]);
         XCTAssertEqual(status.operation, PNSubscribeOperation);
         NSLog(@"timeToken: %@", status.currentTimetoken);
-//        if (self.invocation.selector == @selector(testSetClientStateOnNotSubscribedChannel)) {
-//            XCTAssertEqualObjects(status.currentTimetoken, @14356520332796570);
-//        } else if (self.invocation.selector == @selector(testSetClientStateOnSubscribedChannel)) {
-//            XCTAssertEqualObjects(status.currentTimetoken, @14356520332796570);
-//        }
+        
+        if (self.invocation.selector == @selector(testSetClientStateOnNotSubscribedChannel)) {
+            XCTAssertEqualObjects(status.currentTimetoken, @14356938649889605);
+        } else if (self.invocation.selector == @selector(testSetClientStateOnSubscribedChannel)) {
+            XCTAssertEqualObjects(status.currentTimetoken, @14356938670305577);
+        } else if (self.invocation.selector == @selector(testStateForUUIDOnSubscribedChannel)) {
+            XCTAssertEqualObjects(status.currentTimetoken, @14356938670305577);
+        } else if (self.invocation.selector == @selector(testStateForUUIDOnUnsubscribedChannel)) {
+            XCTAssertEqualObjects(status.currentTimetoken, @14356938670305577);
+        } else {
+            XCTFail(@"we haven't done anything to prepare for %@", NSStringFromSelector(self.invocation.selector));
+        }
         XCTAssertEqualObjects(status.currentTimetoken, status.data.timetoken);
         [self.subscribeExpectation fulfill];
         
     };
     [self PNTest_subscribeToChannels:[self subscriptionChannels] withPresence:NO];
+    self.didReceiveStatusAssertions = nil;
 }
 
 - (void)tearDown {
     PNWeakify(self);
+    // TODO: assertions during teardown
     self.didReceiveStatusAssertions = ^void (PubNub *client, PNSubscribeStatus *status) {
         PNStrongify(self);
         XCTAssertEqualObjects(self.client, client);
@@ -68,7 +77,7 @@
         //        XCTAssertEqual(status.category, PNDisconnectedCategory);
         //        XCTAssertEqual(status.subscribedChannels.count, 0);
         XCTAssertEqual(status.subscribedChannelGroups.count, 0);
-//        XCTAssertEqual(status.operation, PNSubscribeOperation);
+        //        XCTAssertEqual(status.operation, PNSubscribeOperation);
         NSLog(@"timeToken: %@", status.currentTimetoken);
         //        XCTAssertEqualObjects(status.currentTimetoken, @14355626738514132);
         //        XCTAssertEqualObjects(status.currentTimetoken, status.data.timetoken);
@@ -126,6 +135,7 @@
     PNWeakify(self);
     XCTestExpectation *stateExpectation = [self expectationWithDescription:@"clientState"];
     NSDictionary *state = @{
+                            @"test" : @"test"
                             };
     [self.client stateForUUID:self.client.uuid onChannel:[self subscriptionChannels].firstObject withCompletion:^(PNChannelClientStateResult *result, PNErrorStatus *status) {
         PNStrongify(self);
