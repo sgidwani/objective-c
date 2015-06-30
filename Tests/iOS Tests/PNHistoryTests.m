@@ -23,7 +23,7 @@
 
 - (void)testHistory {
     XCTestExpectation *historyExpectation = [self expectationWithDescription:@"history"];
-    [self.client historyForChannel:@"a" start:@14350904008290302 end:@14350906104420848 withCompletion:^(PNHistoryResult *result, PNErrorStatus *status) {
+    [self.client historyForChannel:@"a" start:@14356954400894751 end:@14356954400894900 withCompletion:^(PNHistoryResult *result, PNErrorStatus *status) {
         XCTAssertNil(status.errorData.information);
         XCTAssertNotNil(result);
         XCTAssertEqual(result.statusCode, 200);

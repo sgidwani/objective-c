@@ -34,6 +34,12 @@ static NSString * const kPNChannelGroupTestsName = @"PNClientStateChannelGroupTe
 - (void)setUp {
     [super setUp];
     [self performVerifiedRemoveAllChannelsFromGroup:kPNChannelGroupTestsName withAssertions:nil];
+    if (
+        (self.invocation.selector != @selector(testSetClientStateOnSubscribedChannelGroup)) &&
+        (self.invocation.selector != @selector(testStateForUUIDOnSubscribedChannelGroup))
+        ) {
+        return;
+    }
     PNWeakify(self);
     [self performVerifiedAddChannels:@[@"a", @"b"] toGroup:kPNChannelGroupTestsName withAssertions:^(PNAcknowledgmentStatus *status) {
         PNStrongify(self);
@@ -43,30 +49,36 @@ static NSString * const kPNChannelGroupTestsName = @"PNClientStateChannelGroupTe
         XCTAssertEqual(status.category, PNAcknowledgmentCategory);
         XCTAssertEqual(status.statusCode, 200);
     }];
-    if (self.invocation.selector != @selector(testSetClientStateOnSubscribedChannelGroup)) {
-        return;
-    }
     self.didReceiveStatusAssertions = ^void (PubNub *client, PNSubscribeStatus *status) {
         PNStrongify(self);
         XCTAssertEqualObjects(self.client, client);
         XCTAssertNotNil(status);
         XCTAssertFalse(status.isError);
         XCTAssertEqual(status.category, PNConnectedCategory);
-//        XCTAssertEqual(status.subscribedChannelGroups.count, 0);
-//        NSArray *expectedPresenceSubscriptions = @[@"a"];
-//        XCTAssertEqualObjects([NSSet setWithArray:status.subscribedChannels], [NSSet setWithArray:expectedPresenceSubscriptions]);
+        NSArray *expectedChannelGroups = @[
+                                           kPNChannelGroupTestsName,
+                                           [kPNChannelGroupTestsName stringByAppendingString:@"-pnpres"]
+                                           ];
+        XCTAssertEqual(status.subscribedChannelGroups.count, expectedChannelGroups.count);
+        XCTAssertEqualObjects([NSSet setWithArray:status.subscribedChannelGroups], [NSSet setWithArray:expectedChannelGroups]);
+        
+        NSArray *expectedPresenceSubscriptions = @[];
+        XCTAssertEqualObjects([NSSet setWithArray:status.subscribedChannels], [NSSet setWithArray:expectedPresenceSubscriptions]);
         XCTAssertEqual(status.operation, PNSubscribeOperation);
         NSLog(@"timeToken: %@", status.currentTimetoken);
         if (self.invocation.selector == @selector(testSetClientStateOnSubscribedChannelGroup)) {
-//            XCTAssertEqualObjects(status.currentTimetoken, @14356532752506231);
-        } else if (self.invocation.selector == @selector(testSetClientStateOnNotExistingChannelGroup)) {
-            XCTAssertEqualObjects(status.currentTimetoken, @14355750743453296);
+            XCTAssertEqualObjects(status.currentTimetoken, @14356954400894751);
+        } else if (self.invocation.selector == @selector(testStateForUUIDOnSubscribedChannelGroup)) {
+            XCTAssertEqualObjects(status.currentTimetoken, @14356954400894751);
+        } else {
+            XCTFail(@"not supposed to be handling this tests");
         }
         XCTAssertEqualObjects(status.currentTimetoken, status.data.timetoken);
         [self.channelGroupSubscribeExpectation fulfill];
         
     };
     [self PNTest_subscribeToChannelGroups:[self channelGroups] withPresence:YES];
+    self.didReceiveStatusAssertions = nil;
 }
 
 - (void)tearDown {
@@ -88,7 +100,10 @@ static NSString * const kPNChannelGroupTestsName = @"PNClientStateChannelGroupTe
         XCTAssertEqual(status.operation, PNSetStateOperation);
         XCTAssertEqual(status.category, PNAcknowledgmentCategory);
         XCTAssertEqual(status.statusCode, 200);
-        XCTAssertEqualObjects(status.data.state, state);
+        NSDictionary *expectedState = @{
+                                        @"test" : @"test"
+                                        };
+        XCTAssertEqualObjects(status.data.state, expectedState);
         [stateExpectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:10 handler:^(NSError *error) {
@@ -111,7 +126,7 @@ static NSString * const kPNChannelGroupTestsName = @"PNClientStateChannelGroupTe
         XCTAssertEqual(status.operation, PNSetStateOperation);
         XCTAssertEqual(status.category, PNBadRequestCategory);
         XCTAssertEqual(status.statusCode, 400);
-        XCTAssertNil(status.data.state);
+//        XCTAssertNil(status.data.state);
         // TOOD: there should be a property for this?
 //        XCTAssertEqualObjects(status.data, @"No valid channels specified");
         NSLog(@"Information %@", status.errorData.information);
