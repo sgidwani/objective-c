@@ -1,7 +1,7 @@
 namespace :test do
 
   task :prepare do
-    sh("slather setup Tests/PubNub\ Tests.xcodeproj/")
+    sh("slather setup 'Tests/PubNub\ Tests.xcodeproj/'")
   end
 
   desc "Run the PubNub Integration Tests for iOS"
